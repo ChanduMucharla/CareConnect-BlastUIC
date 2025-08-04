@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            margin: 30px auto;
+            max-width: 800px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .profile-pic {
+            float: right;
+            margin-left: 20px;
+            border-radius: 50%;
+            height: 100px;
+            width: 100px;
+            object-fit: cover;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-top: 50px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">Patient Dashboard</div>
+
+    <div class="container">
+        <div class="section clearfix">
+            {% if user.profile_pic %}
+                <img src="{{ user.profile_pic.url }}" class="profile-pic" alt="Profile Picture">
+            {% endif %}
+            <h2>Hello, {{ user.first_name }} {{ user.last_name }}!</h2>
+            <div class="info">
+                <strong>Email:</strong> {{ user.email }}<br>
+                <strong>Username:</strong> {{ user.username }}<br>
+                <strong>Address:</strong> {{ user.address_line1 }}, {{ user.city }}, {{ user.state }}, {{ user.pincode }}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Book a Consultation</h2>
+            <a href="{% url 'book_appointment' %}" class="btn">Book Appointment</a>
+        </div>
+
+        <div class="section">
+            <h2>Your Appointments</h2>
+            {% if appointments %}
+                <table>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Reason</th>
+                    </tr>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>Dr. {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.time }}</td>
+                        <td>{{ appointment.status }}</td>
+                        <td>{{ appointment.reason }}</td>
+                        <td><a href="{% url 'chat' appointment.doctor.id %}">Chat with Doctor</a> </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No appointments booked yet.</p>
+            {% endif %}
+        </div>
+        <div class="section">
+    <h2>Upload Medical Documents</h2>
+    <a href="{% url 'upload_document' %}" class="btn">Upload Document</a>
+</div>
+
+
+
+        <div class="section">
+            <h2>Health Summary</h2>
+            <p>Your health summary will be shown here once available.</p>
+        </div>
+
+        <div class="section">
+            <a href="/logout/" class="btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="footer">© 2025 CareConnect. All rights reserved.</div>
+</body>
+</html>
+

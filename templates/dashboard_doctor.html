@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #eef3f8;
+        }
+
+        .navbar {
+            background-color: #28a745;
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            margin: 30px auto;
+            max-width: 900px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #1e7e34;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-top: 50px;
+        }
+
+        .appointment {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .appointment strong {
+            display: inline-block;
+            width: 120px;
+        }
+
+        form.inline {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">Doctor Dashboard</div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Welcome, Dr. {{ user.first_name }} {{ user.last_name }}</h2>
+            <div class="info">
+                <strong>Email:</strong> {{ user.email }}<br>
+                <strong>Username:</strong> {{ user.username }}<br>
+                <strong>Address:</strong> {{ user.address_line1 }}, {{ user.city }}, {{ user.state }}, {{ user.pincode }}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>My Patients</h2>
+            <p>No patient data connected yet. This section will list your assigned patients in future versions.</p>
+        </div>
+        <!-- Add this section after "Appointments Overview" in doctor dashboard -->
+
+<div class="section">
+    <h2>Consultation Requests</h2>
+    {% if appointments %}
+        <table>
+            <tr>
+                <th>Patient</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.time }}</td>
+                <td>{{ appointment.reason }}</td>
+                <td>{{ appointment.status }}</td>
+                <td>
+                    {% if appointment.status == 'Pending' %}
+                        <a href="{% url 'accept_appointment' appointment.id %}" class="btn">Accept</a>
+                    {% else %}
+                        {{ appointment.status }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No consultation requests yet.</p>
+    {% endif %}
+</div>
+
+
+        <div class="section">
+            <h2>Appointments Overview</h2>
+            <p>Upcoming appointment details will be shown here once integrated.</p>
+        </div>
+
+        <!-- New Section: Pending Appointments -->
+        <div class="section">
+            <h2>Pending Consultations</h2>
+            {% if pending_appointments %}
+                {% for app in pending_appointments %}
+                    <div class="appointment">
+                        <strong>Patient:</strong> {{ app.patient.username }}<br>
+                        <strong>Date:</strong> {{ app.date }}<br>
+                        <strong>Time:</strong> {{ app.time }}<br>
+                        <strong>Reason:</strong> {{ app.reason }}<br>
+                        <a href="{% url 'accept_appointment' app.id %}" class="btn">Accept</a>
+                        <a href="{% url 'chat' app.patient.id %}">Chat with Patient</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No pending consultations.</p>
+            {% endif %}
+             
+        </div>
+
+
+        <!-- New Section: Upcoming Appointments -->
+        <div class="section">
+            <h2>Upcoming Appointments</h2>
+            {% if upcoming_appointments %}
+                {% for app in upcoming_appointments %}
+                    <div class="appointment">
+                        <strong>Patient:</strong> {{ app.patient.username }}<br>
+                        <strong>Date:</strong> {{ app.date }}<br>
+                        <strong>Time:</strong> {{ app.time }}<br>
+                        <strong>Status:</strong> {{ app.status }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No upcoming appointments.</p>
+            {% endif %}
+        </div>
+        
+        <div class="section">
+    <h2>Notifications</h2>
+    {% if user.notifications.all %}
+        <ul>
+            {% for note in user.notifications.all %}
+                <li>{{ note.message }} — <small>{{ note.created_at|date:"d M, H:i" }}</small></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No notifications yet.</p>
+    {% endif %}
+</div>
+
+
+        <!-- New Section: Past Appointments -->
+        <div class="section">
+            <h2>Previous Appointments</h2>
+            {% if previous_appointments %}
+                {% for app in previous_appointments %}
+                    <div class="appointment">
+                        <strong>Patient:</strong> {{ app.patient.username }}<br>
+                        <strong>Date:</strong> {{ app.date }}<br>
+                        <strong>Status:</strong> {{ app.status }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No previous appointments.</p>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <a href="/logout/" class="btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="footer">© 2025 CareConnect. All rights reserved.</div>
+</body>
+</html>
+
