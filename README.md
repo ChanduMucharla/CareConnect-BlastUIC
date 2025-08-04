@@ -64,5 +64,48 @@ CareConnect is a web-based healthcare communication platform designed for Patien
 
 ---
 
-## 🗂️ Project Structure
+### 📦 Prerequisites
 
+- Python 3.x
+- Pip
+- Git
+- Virtualenv (recommended)
+
+### 🔧 Setup Instructions
+
+```bash
+# Clone the repo
+git clone https://github.com/ChanduMucharla/CareConnect-BlastUIC.git
+cd CareConnect-BlastUIC
+
+# Create a virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run migrations
+python manage.py makemigrations
+python manage.py migrate
+
+# Create a superuser (optional for admin access)
+python manage.py createsuperuser
+
+# Start development server
+python manage.py runserver
+
+## 🗂️ Project Structure
+## 👨‍💻 Developer Info
+
+**Developed by**:  
+**Chandu Naga Sai Jyothi Mucharla**  
+📧 Email: [chandumucharla09@gmail.com](mailto:chandumucharla09@gmail.com)  
+🎓 Final Year BTech, Computer Science  
+🚀 Passionate about Full Stack Web Development, Android, and Data Science
+
+---
+
+## ©️ Copyright
+
+© 2025 Chandu Naga Sai Jyothi Mucharla. All Rights Reserved.  
